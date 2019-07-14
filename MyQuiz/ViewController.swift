@@ -18,6 +18,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var checkButton: UIButton!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var ansSwitchName: UISwitch!
+    @IBOutlet weak var finalMessageLabel: UILabel!
+    
+    @IBOutlet weak var revealAnswersLabel: UILabel!
     @IBAction func checkButtonClicked(_ sender: Any) {
         checkData()
     }
@@ -38,7 +41,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         updateUI()
     }
 
@@ -56,11 +58,9 @@ class ViewController: UIViewController {
             if (score > questions.count/2){
                 msg = "Well done. Click restart to play the game again."
             } else {
-                msg = "There is room for improvement. Take a deep breath, try again."
+                msg = "There is room for improvement. Take a deep breath, Click restart to try again."
             }
-            questionLabel.text = msg
-            validationLabel.text = ""
-            answerTextField.text = ""
+            finalMessageLabel.text = msg
             checkButton.setTitle("Restart", for: .normal)
             answerTextField.isEnabled = false
             
@@ -68,18 +68,6 @@ class ViewController: UIViewController {
         }
         scoreLabel.text = "Score: \(score)"
     }
-    
-    func resetScreen(){
-        restart = false
-        currentQNum = 1
-        answerTextField.text = ""
-        validationLabel.text = ""
-        scoreLabel.text = ""
-        score = 0
-        answerTextField.isEnabled = true
-        updateUI()
-    }
-    
     func checkData(){
         if(restart == true) {
             resetScreen()
@@ -97,17 +85,32 @@ class ViewController: UIViewController {
             score += 1
         } else {
             if(shouldRevealSwitch.isOn) {
-                validationLabel.text = "Incorrect. Correct answer is: \(answers[currentQNum-1])"}
+                validationLabel.text = "Incorrect. \nCorrect answer is: \(answers[currentQNum-1])"}
             else {
                 validationLabel.text = "Incorrect"
             }
         }
-//        progressBar.frame.size.width = (view.frame.size.width / 3) * CGFloat(currentQNum)
+        //        progressBar.frame.size.width = (view.frame.size.width / 3) * CGFloat(currentQNum)
         currentQNum += 1
         updateUI()
     }
     
-    @IBOutlet weak var revealAnswersLabel: UILabel!
+    
+    func resetScreen(){
+        restart = false
+        currentQNum = 1
+        answerTextField.text = ""
+        validationLabel.text = ""
+        scoreLabel.text = ""
+        score = 0
+        answerTextField.isEnabled = true
+        checkButton.setTitle("Check", for: .normal)
+        finalMessageLabel.text = ""
+        updateUI()
+        
+    }
+    
+    
     @IBAction func answerSwitch(_ sender: Any) {
         if(ansSwitchName.isOn){
             revealAnswersLabel.text = "Reveal answers if I got it wrong: On"
